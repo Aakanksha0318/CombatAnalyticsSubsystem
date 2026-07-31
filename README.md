@@ -2,9 +2,13 @@
 
 **Author:** Aakanksha (Lead) — ID 590013777, Data Science (DATA-SCIENCE-B1)
 
+## Overview
+
+This project implements a Combat Analytics and Telemetry Subsystem in Unreal Engine 5 using C++. It captures gameplay events such as kills, void falls, and arena hazards, computes player performance statistics, tracks nemesis relationships, and exports structured telemetry in JSON format for further analysis using Python and Pandas.
+
 ## Video Walkthrough
 
-`\\https://drive.google.com/file/d/1Y0aLr1dbD6Y9TET4kg\_Bq27MuN-aH7dZ/view?usp=sharing` — walkthrough of telemetry capture logic, async
+`https://drive.google.com/file/d/1Y0aLr1dbD6Y9TET4kg\_Bq27MuN-aH7dZ/view?usp=sharing` — walkthrough of telemetry capture logic, async
 serialization, and data maps in VS Code, plus a live UE5 editor session
 showing the raw JSON log populate in real time.
 
@@ -20,19 +24,27 @@ game thread) to `Saved/Analytics/Match\\\_Data\\\_Raw.json` as newline-delimited
 JSON (NDJSON) — one JSON object per line, so external tools can stream-parse
 without ever loading a single giant array.
 
+## Technologies Used
+
+- Unreal Engine 5.5
+- C++
+- Visual Studio 2022
+- JSON Serialization
+- Blueprint Integration
+
 ## Files
 
 |File|Purpose|
 |-|-|
-|`Source/YourGame/Public/CombatAnalyticsTypes.h`|`FArenaEventRecord`, `FCombatKillRecord`, `FPlayerPerformanceStats` structs + `ToJson()`|
-|`Source/YourGame/Private/CombatAnalyticsTypes.cpp`|`ToJson()` implementations|
-|`Source/YourGame/Public/CombatAnalyticsSubsystem.h`|Subsystem API + thread-safe internal state|
-|`Source/YourGame/Private/CombatAnalyticsSubsystem.cpp`|Hooks, K/D/V + Nemesis logic, async NDJSON writer|
-|`Source/YourGame/YourGame.Build.cs`|Module dependency snippet (`Json`, `JsonUtilities`)|
+|`Source/CombatAnalytics/Public/CombatAnalyticsTypes.h`|`FArenaEventRecord`, `FCombatKillRecord`, `FPlayerPerformanceStats` structs + `ToJson()`|
+|`Source/CombatAnalytics/Private/CombatAnalyticsTypes.cpp`|`ToJson()` implementations|
+|`Source/CombatAnalytics/Public/CombatAnalyticsSubsystem.h`|Subsystem API + thread-safe internal state|
+|`Source/CombatAnalytics/Private/CombatAnalyticsSubsystem.cpp`|Hooks, K/D/V + Nemesis logic, async NDJSON writer|
+|`Source/CombatAnalytics/CombatAnalytics.Build.cs`|Module dependency snippet (`Json`, `JsonUtilities`)|
 
 ## Integration
 
-1. Merge the `Json` / `JsonUtilities` dependencies from `YourGame.Build.cs`
+1. Merge the `Json` / `JsonUtilities` dependencies from `CombatAnalytics.Build.cs`
 into your project's actual Build.cs.
 2. Drop `CombatAnalyticsTypes.\\\*` and `CombatAnalyticsSubsystem.\\\*` into your
 module's `Public`/`Private` folders.
@@ -127,6 +139,7 @@ Load it in Pandas with:
 import pandas as pd
 df = pd.read\\\_json("Match\\\_Data\\\_Raw.json", lines=True)
 ```
+> Note: For demonstration purposes, gameplay events are simulated using Blueprint key bindings. In a production game, these functions would be triggered automatically by the combat, damage, and hazard systems.
 
 ## Threading Notes
 
